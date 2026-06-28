@@ -1,0 +1,8 @@
+# dev / reference artifacts — not needed for the live kiosk
+user-card-light-dark/
+user-card-light-dark-modified/
+card-prototype/
+prototype-box.html
+.playwright-mcp/
+.DS_Store
+Thumbs.db

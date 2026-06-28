@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Foger Switch — Flavor Cards</title>
+<link rel="stylesheet" href="cards.css?v=2" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- idle attract -->
+  <section id="attract" class="attract" aria-hidden="true">
+    <div class="attract-inner">
+      <p class="attract-kicker">Foger&nbsp;Switch</p>
+      <h1 class="attract-title">Flavor<br/>Menu</h1>
+      <p class="attract-sub">Tap anywhere to explore<br/><span id="attractCount">90</span> flavors</p>
+      <div class="attract-pulse" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <main id="app" class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">F</span>
+        <span class="brand-text"><span class="brand-name">FOGER SWITCH</span><span class="brand-tag">Flavor Menu</span></span>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.3-4.3M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="search" class="search" type="text" inputmode="search" autocomplete="off" placeholder="Search flavors…" aria-label="Search flavors" />
+        <button id="searchClear" class="search-clear" aria-label="Clear search" hidden>&times;</button>
+      </div>
+    </header>
+
+    <nav id="filters" class="filters" aria-label="Filter by category"></nav>
+    <div class="count-row"><span id="resultCount" class="result-count"></span></div>
+
+    <section id="grid" class="grid" aria-label="Flavors"></section>
+    <p id="empty" class="empty" hidden>No flavors match that search.</p>
+  </main>
+
+  <script src="cards.js?v=2"></script>
+</body>
+</html>
