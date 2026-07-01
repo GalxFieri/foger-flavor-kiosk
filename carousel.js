@@ -329,7 +329,9 @@
     const n = items.length; if(!n) return;
     openIndex = ((Math.round(pos) % n) + n) % n;
     render();
-    requestAnimationFrame(()=>{ const el = cardEls[openIndex]; if(el) el.classList.add("open"); });
+    // Skip the auto-open while idle/attract is showing — the carousel keeps
+    // spinning behind the splash and shouldn't pop a reveal panel open.
+    requestAnimationFrame(()=>{ if (attractOn) return; const el = cardEls[openIndex]; if(el) el.classList.add("open"); });
   }
   function closeOpen(){
     if (openIndex !== null){ const el = cardEls[openIndex]; if (el){ el.classList.remove("open"); el.classList.remove("rating-open"); } }
@@ -392,6 +394,7 @@
     dragging = true; dragStarted = false;
     startX = e.clientX; startPos = pos;
     moveSamples = [{ t: performance.now(), pos }];
+    stopAutoplay();
     if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
     momentumActive = false; snapping = false; vel = 0;
     els.stage.setPointerCapture && e.pointerId != null && els.stage.setPointerCapture(e.pointerId);
@@ -475,6 +478,27 @@
     els.attract.addEventListener("click", wakeAttract);
   }
 
+  // ---------- idle autoplay (slow continuous drift behind the attract splash) ----------
+  let autoplayActive = false;
+  const AUTOPLAY_SPEED = 0.0035; // index-units per frame — one card every ~4-5s
+
+  function startAutoplay(){
+    if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+    momentumActive = false; snapping = false; vel = 0;
+    autoplayActive = true;
+    const step = () => {
+      if (!autoplayActive){ rafId = null; return; }
+      const n = items.length;
+      if (n){ pos += AUTOPLAY_SPEED; if (pos >= n) pos -= n; render(); }
+      rafId = requestAnimationFrame(step);
+    };
+    rafId = requestAnimationFrame(step);
+  }
+  function stopAutoplay(){
+    autoplayActive = false;
+    if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+  }
+
   // ---------- idle attract ----------
   let idleTimer=null, attractOn=false;
   function resetIdle(){ clearTimeout(idleTimer); idleTimer=setTimeout(showAttract, IDLE_MS); }
@@ -484,6 +508,13 @@
     ratedThisSession.clear();
     setFilter("all");
     els.attract.classList.add("show"); els.attract.setAttribute("aria-hidden","false");
+    startAutoplay();
   }
-  function wakeAttract(){ attractOn = false; els.attract.classList.remove("show"); els.attract.setAttribute("aria-hidden","true"); resetIdle(); }
+  function wakeAttract(){
+    attractOn = false; // must flip before animateTo settles, so the auto-open guard allows it
+    stopAutoplay();
+    els.attract.classList.remove("show"); els.attract.setAttribute("aria-hidden","true");
+    resetIdle();
+    if (items.length) animateTo(Math.round(pos)); // snap to the nearest flavor + auto-open it
+  }
 })();
