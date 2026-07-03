@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT DATA — compiled from public sources (fogervape.com) on 2026-06-18. Flavor names and profile blurbs MUST be verified by store staff before going live. To edit: change/add/remove entries below. Each flavor needs a name, a category id (must match one in the categories list), and a short profile sentence.",
+  "_note": "Foger SWITCH PRO POD flavors only (strictly this product line — Foger Bit is a separate device and intentionally excluded). Trimmed 2026-07-03: verified all 64 entries below against the live Switch Pro Pod catalog on fogervapes.com; removed 22 that were Bit-exclusive or unconfirmed. Profile blurbs still need staff verification. To edit: change/add/remove entries below. Each flavor needs a name, a category id (must match one in the categories list), and a short profile sentence.",
   "categories": [
     { "id": "fruit",     "name": "Fruit",          "hue": 348 },
     { "id": "frozen",    "name": "Frozen / Ice",   "hue": 190 },
@@ -22,25 +22,12 @@
     { "name": "Strawberry Ice",          "category": "frozen",   "profile": "Ripe red strawberries swept up in a frosty rush." },
     { "name": "Juicy Peach Ice",         "category": "frozen",   "profile": "Sweet orchard peach with a crisp icy snap." },
     { "name": "Blue Razz Ice",           "category": "frozen",   "profile": "Tangy blue raspberry chilled to a sweet-sour freeze." },
-    { "name": "Frozen Vanilla",          "category": "frozen",   "profile": "Smooth vanilla cream with a surprising cool finish." },
-    { "name": "Frozen Tropical",         "category": "frozen",   "profile": "A medley of tropical fruits over clean menthol ice." },
-    { "name": "Frozen Peach",            "category": "frozen",   "profile": "Soft, sweet peach frozen to a refreshing chill." },
-    { "name": "Frozen Kiwi",             "category": "frozen",   "profile": "Tart green kiwi with a brisk frozen edge." },
-    { "name": "Frozen Cherry",           "category": "frozen",   "profile": "Bold dark cherry layered over a cold menthol kick." },
-    { "name": "Orange Cranberry Lime Ice","category": "frozen",  "profile": "Bright orange, tart cranberry and zesty lime on ice." },
 
     { "name": "Sour Fcuking Fab",        "category": "sour",     "profile": "An over-the-top sour fruit punch with a bold tangy kick." },
     { "name": "Sour Gush",               "category": "sour",     "profile": "Mixed berries bursting with a mouth-puckering sour rush." },
     { "name": "Sour Cranapple",          "category": "sour",     "profile": "Tart cranberry and crisp apple with a sour twist." },
     { "name": "Sour Blue Dust",          "category": "sour",     "profile": "Sugared blue raspberry candy with a sour powder finish." },
     { "name": "Sour Apple Ice",          "category": "sour",     "profile": "Sour green apple chilled with a cool icy edge." },
-    { "name": "Sour Grape Gush",         "category": "sour",     "profile": "Juicy grape candy soaked in a tangy sour glaze." },
-    { "name": "Sour Kiwi Gush",          "category": "sour",     "profile": "Tart kiwi with a gushing wave of sour sweetness." },
-    { "name": "Sour Blueberry Gush",     "category": "sour",     "profile": "Ripe blueberry candy bursting with sour zing." },
-    { "name": "Sour Blackberry Gush",    "category": "sour",     "profile": "Dark blackberry with a bold, puckering sour punch." },
-    { "name": "Sour Cherry Gush",        "category": "sour",     "profile": "Sweet cherry candy wrapped in a sour shell." },
-    { "name": "Sour Mango Pineapple",    "category": "sour",     "profile": "Tropical mango and pineapple with a sour finish." },
-    { "name": "Sour Apple Watermelon",   "category": "sour",     "profile": "Crisp apple and juicy watermelon laced with sour." },
 
     { "name": "Sour Raspberry Punch",    "category": "beverage", "profile": "Tangy raspberry fruit punch with a sour kick." },
     { "name": "Purple Passion Punch",    "category": "beverage", "profile": "A bold blend of grape and mixed-berry punch." },
@@ -87,24 +74,15 @@
     { "name": "Pineapple Coconut",       "category": "fruit",    "profile": "Tropical pineapple and creamy coconut, like a piña colada." },
     { "name": "Mexico Mango",            "category": "fruit",    "profile": "Ripe, juicy mango with a hint of tropical spice." },
     { "name": "Kiwi Dragon Berry",       "category": "fruit",    "profile": "Kiwi, dragon fruit and berries in a tropical mix." },
-    { "name": "Cherry Lemon",            "category": "fruit",    "profile": "Sweet cherry brightened with a squeeze of lemon." },
     { "name": "Blueberry Watermelon",    "category": "fruit",    "profile": "Plump blueberry and crisp watermelon together." },
-    { "name": "Banana Taffey Freeze",    "category": "fruit",    "profile": "Chewy banana taffy with a cool, smooth finish." },
-    { "name": "White Peach Raspberry",   "category": "fruit",    "profile": "Delicate white peach with tart raspberry." },
-    { "name": "Georgia Peach",           "category": "fruit",    "profile": "Soft Southern peach, sweet and sun-ripened." },
-    { "name": "Summer Mist",             "category": "fruit",    "profile": "A light, breezy blend of cool summer fruits." },
-    { "name": "Strawberry Burst",        "category": "fruit",    "profile": "A bursting rush of sweet, ripe strawberry." },
-    { "name": "Passion Kiwi",            "category": "fruit",    "profile": "Tangy passion fruit paired with tart kiwi." },
 
     { "name": "Icy Mint",                "category": "mint",     "profile": "Sharp, frosty mint with a clean cold finish." },
     { "name": "Miami Mint",              "category": "mint",     "profile": "Bright, breezy mint with a refreshing chill." },
     { "name": "Gum Mint",                "category": "mint",     "profile": "Sweet spearmint chewing-gum flavor, cool and smooth." },
     { "name": "Cool Mint",               "category": "mint",     "profile": "Crisp classic mint with a refreshing exhale." },
-    { "name": "Winter Green",            "category": "mint",     "profile": "Bold wintergreen with a brisk, minty bite." },
 
     { "name": "Tobacco",                 "category": "tobacco",  "profile": "Smooth, rich classic tobacco with a mellow finish." },
 
-    { "name": "Clear",                   "category": "other",    "profile": "Pure and unflavored — just clean, smooth vapor." },
-    { "name": "Fcuking FAB",             "category": "other",    "profile": "Foger's signature bold, fruity house blend." }
+    { "name": "Clear",                   "category": "other",    "profile": "Pure and unflavored — just clean, smooth vapor." }
   ]
 }
