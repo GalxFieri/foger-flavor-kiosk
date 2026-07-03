@@ -38,7 +38,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 .attract.show{opacity:1;visibility:visible;}
 .attract-inner{text-align:center;}
 .attract-kicker{font-family:var(--display);font-weight:700;letter-spacing:.5em;text-indent:.5em;font-size:clamp(14px,2.4vw,22px);color:var(--ink-soft);margin:0 0 .4em;text-transform:uppercase;}
-.attract-title{font-family:var(--display);font-weight:800;margin:0;font-size:clamp(72px,18vw,230px);line-height:.86;letter-spacing:-.02em;background:var(--holo);background-size:220% 220%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holoShift 8s linear infinite;}
+.attract-title{font-family:var(--display);font-weight:800;margin:0;font-size:clamp(56px,min(18vw,20vh),230px);line-height:.86;letter-spacing:-.02em;background:var(--holo);background-size:220% 220%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holoShift 8s linear infinite;}
 @keyframes holoShift{to{background-position:220% 0;}}
 .attract-sub{font-family:var(--body);color:var(--ink-soft);font-size:clamp(18px,3vw,30px);margin:1.2em 0 0;line-height:1.4;}
 .attract-sub span{color:var(--ink);font-weight:600;}
@@ -78,7 +78,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 .empty{flex:1 1 auto;display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:700;color:var(--ink-faint);font-size:clamp(20px,3vw,30px);}
 
 /* ---------- flavor card ---------- */
-.card{--accent:#2f7bf0;--accent-h:218;position:relative;height:clamp(26rem,42vw,30rem);border-radius:1.5rem;overflow:hidden;cursor:pointer;
+.card{--accent:#2f7bf0;--accent-h:218;position:relative;height:clamp(19rem,min(42vw,62vh),30rem);border-radius:1.5rem;overflow:hidden;cursor:pointer;
   background:#0b0b14;border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 44px rgba(0,0,0,.5);
   animation:cardIn .5s var(--ease) both;}
 @keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.97);}to{opacity:1;transform:none;}}

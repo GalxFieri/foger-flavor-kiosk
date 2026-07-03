@@ -217,7 +217,8 @@
     wireGlobalEvents();
     resetIdle();
     requestAnimationFrame(measureAndRender);
-    window.addEventListener("resize", ()=>render());
+    window.addEventListener("resize", measureAndRender);
+    window.addEventListener("orientationchange", ()=>setTimeout(measureAndRender, 60));
   }
 
   function buildFilterChips(){
@@ -293,10 +294,26 @@
 
   // ---------- render ----------
   let stageHalf = 400, cardH = 380;
+  const CARD_ASPECT = 0.636; // width / height, matches the card's design proportions
   function measureAndRender(){
     const r = els.stage.getBoundingClientRect();
+
+    // Size the card off ACTUAL available space in both dimensions, so it
+    // can't overflow on any viewport shape (wide-short landscape phone,
+    // narrow-tall portrait phone, tablet, desktop) -- take whichever of a
+    // height-driven or width-driven card size is smaller, so both a vertical
+    // and a horizontal budget are always respected.
+    const chFromHeight = r.height * 0.86;
+    const cwFromWidth = r.width * 0.42; // leave room for side cards to peek
+    const chFromWidth = cwFromWidth / CARD_ASPECT;
+    let ch = Math.min(chFromHeight, chFromWidth);
+    ch = Math.max(190, Math.min(460, ch));
+    const cw = ch * CARD_ASPECT;
+    document.documentElement.style.setProperty("--ch", ch + "px");
+    document.documentElement.style.setProperty("--cw", cw + "px");
+
     stageHalf = Math.max(120, r.width/2);
-    const c0 = cardEls[0]; if (c0) cardH = c0.getBoundingClientRect().height || cardH;
+    cardH = ch;
     render();
   }
 
