@@ -131,10 +131,10 @@
   const saveR = (r) => { try { localStorage.setItem(RKEY, JSON.stringify(r)); } catch(e){} };
   function renderRating(id){
     const d = loadR()[id];
-    if (!d || !d.count) return `<span class="stars-row">☆☆☆☆☆</span><span class="empty">No ratings yet</span>`;
+    if (!d || !d.count) return `<span class="stars-row">☆☆☆☆☆</span><span class="rating-empty">No ratings yet</span>`;
     const avg = d.sum/d.count, filled = Math.round(avg);
     return `<span class="stars-row"><b>${"★".repeat(filled)}</b>${"☆".repeat(5-filled)}</span>`+
-           `<span class="score">${avg.toFixed(1)} <span class="empty">(${d.count})</span></span>`;
+           `<span class="score">${avg.toFixed(1)} <span class="rating-empty">(${d.count})</span></span>`;
   }
   function recordRating(id, stars){
     const all = loadR(), d = all[id] || {sum:0,count:0};

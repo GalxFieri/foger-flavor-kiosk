@@ -111,7 +111,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 .rating .stars-row{font-size:1rem;line-height:1;letter-spacing:.06em;color:#4a4866;}
 .rating .stars-row b{color:var(--accent);font-weight:400;}
 .rating .score{color:var(--ink);font-weight:600;}
-.rating .empty{color:var(--ink-faint);}
+.rating-empty{font-family:var(--body);font-weight:400;font-size:.8rem;text-align:left;color:var(--ink-faint);}
 .rate-btn{flex:0 0 auto;font-family:var(--body);font-weight:600;font-size:.9rem;color:#0a0712;cursor:pointer;border:none;border-radius:1.1rem;padding:.6rem .95rem;white-space:nowrap;background:var(--accent);box-shadow:0 6px 18px hsl(var(--accent-h) 80% 45% / .45);transition:transform .12s,filter .2s;}
 .rate-btn:active{transform:scale(.95);}
 .rate-btn:disabled{cursor:default;background:#2a2940;color:var(--ink-faint);box-shadow:none;}
