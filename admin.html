@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Foger Switch — Admin</title>
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+  <div class="wrap">
+    <!-- ===================== GATE ===================== -->
+    <section id="gate" class="gate">
+      <!-- LOGIN (returning) -->
+      <div id="loginView" class="gate-card" hidden>
+        <div class="brand-mark gate-mark">F</div>
+        <h1 class="gate-title">Admin Access</h1>
+        <p class="gate-sub">Enter your 6-digit passcode</p>
+        <div id="dots" class="dots" aria-hidden="true"></div>
+        <div class="keypad" id="keypad"></div>
+        <p id="loginMsg" class="msg" role="status" style="margin-top:16px"></p>
+      </div>
+
+      <!-- SETUP (first run) -->
+      <div id="setupView" class="gate-card" hidden>
+        <div class="brand-mark gate-mark">F</div>
+        <h1 class="gate-title">Set Up Admin</h1>
+        <p class="gate-sub">Create the first admin passcode. You can add more people later.</p>
+        <div class="field"><label for="setupName">Your name</label>
+          <input id="setupName" type="text" autocomplete="off" placeholder="Owner" /></div>
+        <div class="field"><label for="setupCode">6-digit passcode</label>
+          <input id="setupCode" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••••" /></div>
+        <div class="field"><label for="setupConfirm">Confirm passcode</label>
+          <input id="setupConfirm" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••••" /></div>
+        <p id="setupMsg" class="msg bad"></p>
+        <button id="setupBtn" class="btn primary" style="width:100%;margin-top:6px">Create passcode</button>
+      </div>
+    </section>
+
+    <!-- ===================== PANEL ===================== -->
+    <section id="panel" class="panel" hidden>
+      <div class="panel-head">
+        <div class="brand-mark">F</div>
+        <h1 class="panel-title">Kiosk Admin</h1>
+        <span class="who" id="who"></span>
+        <button id="lockBtn" class="btn ghost">Lock</button>
+        <button id="exitBtn" class="btn">Exit to kiosk ↗</button>
+      </div>
+
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="avail">Availability</button>
+        <button class="tab" data-tab="add">Add Flavor</button>
+        <button class="tab" data-tab="pass">Passcodes</button>
+      </nav>
+
+      <!-- AVAILABILITY -->
+      <div id="tab-avail" class="tabpage">
+        <div class="toolbar">
+          <input id="availSearch" class="search" type="text" inputmode="search" autocomplete="off" placeholder="Search flavors…" />
+          <span id="availCount" class="count-tag"></span>
+        </div>
+        <p class="note" style="margin:0 0 12px">Toggle a flavor off when it's out of stock. It stays on the menu, shown dimmed with an “Out of Stock” badge.</p>
+        <div id="flavorList" class="flavor-list"></div>
+      </div>
+
+      <!-- ADD FLAVOR -->
+      <div id="tab-add" class="tabpage" hidden>
+        <div class="add-grid">
+          <div class="form-col">
+            <div class="field"><label for="addName">Flavor name</label>
+              <input id="addName" type="text" autocomplete="off" placeholder="e.g. Blue Razz Slush" /></div>
+            <div class="field"><label for="addProfile">Flavor profile</label>
+              <textarea id="addProfile" placeholder="Short description shown when a customer opens the card."></textarea></div>
+            <div class="field"><label for="addCategory">Category</label>
+              <select id="addCategory"></select></div>
+            <div class="field inline-toggle">
+              <span id="addIced" class="switch" role="switch" aria-checked="false" tabindex="0"></span>
+              <label for="addIced" style="margin:0">Iced / menthol (shows under the “Iced” filter)</label>
+            </div>
+            <div class="field"><label for="addHue">Pod color</label>
+              <div class="hue-row">
+                <input id="addHue" class="hue-slider" type="range" min="0" max="360" value="250" />
+              </div>
+              <div id="swatches" class="swatches"></div>
+            </div>
+            <p id="addMsg" class="msg"></p>
+            <button id="addBtn" class="btn primary" style="width:100%">Add flavor</button>
+          </div>
+          <div class="preview-col">
+            <div id="previewPod" class="preview-pod"></div>
+            <p class="preview-name" id="previewName">New Flavor</p>
+            <p class="filename">Real photo later: <code id="previewFile">pods/new-flavor.png</code></p>
+          </div>
+        </div>
+
+        <h2 class="section-h">Added flavors</h2>
+        <p class="note" id="customEmpty">No custom flavors yet. Ones you add appear here.</p>
+        <div id="customList" class="mini-list"></div>
+      </div>
+
+      <!-- PASSCODES -->
+      <div id="tab-pass" class="tabpage" hidden>
+        <p class="note" style="margin:0 0 12px">Each person gets their own 6-digit code. Up to 12. Codes are stored on this device only.</p>
+        <div id="peopleList" class="mini-list"></div>
+
+        <h2 class="section-h">Add a person</h2>
+        <div class="row-form">
+          <div class="field"><label for="pName">Name</label>
+            <input id="pName" type="text" autocomplete="off" placeholder="Staff name" /></div>
+          <div class="field"><label for="pCode">6-digit code</label>
+            <input id="pCode" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••••" /></div>
+          <button id="pAddBtn" class="btn primary">Add</button>
+        </div>
+        <p id="passMsg" class="msg"></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="pod-art.js"></script>
+  <script src="kiosk-store.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

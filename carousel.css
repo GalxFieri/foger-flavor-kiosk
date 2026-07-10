@@ -105,6 +105,18 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 .card.silhouette .hero svg, .card.silhouette .hero img{filter:grayscale(1) brightness(.4) contrast(.85);}
 .card.silhouette::after{opacity:0;}
 
+/* out-of-stock (admin-toggled) — dimmed "locked" look, still interactive.
+   Independent of .silhouette (depth); when a card is both, silhouette wins
+   visually and the badge hides (no identifying detail on deep back cards). */
+.card.unavailable .hero svg, .card.unavailable .hero img{filter:grayscale(.85) brightness(.62) contrast(.92);}
+.card.unavailable::after{opacity:.25;}
+.stock-badge{position:absolute;top:calc(var(--cw)*.06);left:50%;transform:translateX(-50%);z-index:6;
+  font-family:var(--display);font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  font-size:clamp(9px,calc(var(--cw)*.052),15px);color:#fff;white-space:nowrap;
+  padding:.45em .85em;border-radius:999px;background:rgba(10,8,14,.72);border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(0,0,0,.45);}
+.card.silhouette .stock-badge{display:none;}
+
 /* large blurred gradient anchored to the bottom — grows on open */
 .scrim{position:absolute;left:0;right:0;bottom:0;height:62%;z-index:2;pointer-events:none;
   -webkit-mask:linear-gradient(to top,#000 45%,transparent);mask:linear-gradient(to top,#000 45%,transparent);
