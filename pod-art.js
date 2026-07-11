@@ -52,6 +52,9 @@
     "icy-mint":{h:185}, "miami-mint":{h:165}, "gum-mint":{h:205}, "cool-mint":{h:168}, "winter-green":{h:150},
     // tobacco / other
     "tobacco":{h:28,s:30}, "clear":{h:210,s:6,dark:true}, "fcuking-fab":{h:330},
+    // added 2026-07 — 6 new Switch flavors; hues sampled from the real pods
+    "blue-dragon":{h:202}, "blue-sour-raspberry":{h:250}, "lemon-heads":{h:63},
+    "lime-berry-orange":{h:32}, "sour-punch":{h:82}, "strawberry-mango":{h:358},
   };
 
   // Build pod render params from an explicit color spec + its category.

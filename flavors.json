@@ -1,5 +1,5 @@
 {
-  "_note": "Foger SWITCH PRO POD flavors only (strictly this product line — Foger Bit is a separate device and intentionally excluded). Trimmed 2026-07-03: verified all 64 entries below against the live Switch Pro Pod catalog on fogervapes.com; removed 22 that were Bit-exclusive or unconfirmed. Profile blurbs still need staff verification. To edit: change/add/remove entries below. Each flavor needs a name, a category id (must match one in the categories list), and a short profile sentence.",
+  "_note": "Foger SWITCH PRO POD flavors only (strictly this product line — Foger Bit is a separate device and intentionally excluded). Trimmed 2026-07-03 to 64 verified Switch entries; 6 more added 2026-07-11 (Blue Sour Raspberry, Sour Punch, Lemon Heads, Blue Dragon, Lime Berry Orange, Strawberry Mango) = 70. Profile blurbs still need staff verification. To edit: change/add/remove entries below. Each flavor needs a name, a category id (must match one in the categories list), and a short profile sentence.",
   "categories": [
     { "id": "fruit",     "name": "Fruit",          "hue": 348 },
     { "id": "frozen",    "name": "Frozen / Ice",   "hue": 190 },
@@ -28,8 +28,10 @@
     { "name": "Sour Cranapple",          "category": "sour",     "profile": "Tart cranberry and crisp apple with a sour twist." },
     { "name": "Sour Blue Dust",          "category": "sour",     "profile": "Sugared blue raspberry candy with a sour powder finish." },
     { "name": "Sour Apple Ice",          "category": "sour",     "profile": "Sour green apple chilled with a cool icy edge." },
+    { "name": "Blue Sour Raspberry",     "category": "sour",     "profile": "Tangy blue raspberry with a bold, mouth-puckering sour kick." },
 
     { "name": "Sour Raspberry Punch",    "category": "beverage", "profile": "Tangy raspberry fruit punch with a sour kick." },
+    { "name": "Sour Punch",              "category": "beverage", "profile": "A sour tropical fruit-punch rush with a candy-sweet finish." },
     { "name": "Purple Passion Punch",    "category": "beverage", "profile": "A bold blend of grape and mixed-berry punch." },
     { "name": "Triple Berry Punch",      "category": "beverage", "profile": "Strawberry, blueberry and raspberry in a sweet punch." },
     { "name": "Hawaiian Punch",          "category": "beverage", "profile": "Classic tropical fruit punch, sweet and nostalgic." },
@@ -50,6 +52,7 @@
     { "name": "Strawberry Cotton Candy", "category": "candy",    "profile": "Spun strawberry cotton candy, light and sugary." },
     { "name": "Blueberry Cotton Candy",  "category": "candy",    "profile": "Fluffy blueberry cotton candy off the cone." },
     { "name": "Watermelon Cotton Candy", "category": "candy",    "profile": "Sweet watermelon spun into airy cotton candy." },
+    { "name": "Lemon Heads",             "category": "candy",    "profile": "Zesty lemon candy — sweet, tart and nostalgic." },
 
     { "name": "Chocolate Cupcake",       "category": "dessert",  "profile": "Rich chocolate cupcake with creamy frosting." },
     { "name": "Vanilla Cupcake",         "category": "dessert",  "profile": "Classic vanilla cupcake topped with sweet icing." },
@@ -75,6 +78,9 @@
     { "name": "Mexico Mango",            "category": "fruit",    "profile": "Ripe, juicy mango with a hint of tropical spice." },
     { "name": "Kiwi Dragon Berry",       "category": "fruit",    "profile": "Kiwi, dragon fruit and berries in a tropical mix." },
     { "name": "Blueberry Watermelon",    "category": "fruit",    "profile": "Plump blueberry and crisp watermelon together." },
+    { "name": "Blue Dragon",             "category": "fruit",    "profile": "Exotic dragon fruit and sweet blueberry in a smooth tropical blend." },
+    { "name": "Lime Berry Orange",       "category": "fruit",    "profile": "Zesty lime, ripe berries and juicy orange in a citrus-forward mix." },
+    { "name": "Strawberry Mango",        "category": "fruit",    "profile": "Ripe strawberry and juicy mango in a sweet tropical blend." },
 
     { "name": "Icy Mint",                "category": "mint",     "profile": "Sharp, frosty mint with a clean cold finish." },
     { "name": "Miami Mint",              "category": "mint",     "profile": "Bright, breezy mint with a refreshing chill." },
