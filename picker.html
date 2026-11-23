@@ -34,10 +34,10 @@ h1{font:700 clamp(30px,7.5vw,40px)/1.08 "Inter Tight",system-ui,sans-serif;lette
 .big:hover{filter:brightness(1.08)}
 .big:disabled{opacity:.6;cursor:default}
 button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-.result{border:1px solid var(--rule);border-left:4px solid var(--c,var(--accent));border-radius:12px;padding:16px 18px;margin-top:16px}
+.result{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:12px;padding:16px 18px;margin-top:16px}
 .result[hidden]{display:none}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font:500 14px Inter,sans-serif;color:var(--soft)}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--soft);flex:none;display:inline-block}
 .new{font:600 13px Inter;color:var(--accent);border:1px solid currentColor;border-radius:99px;padding:0 8px}
 .result h2{font:700 26px/1.15 "Inter Tight",sans-serif;margin:6px 0 4px}
 .result p{margin:0}
@@ -92,15 +92,23 @@ h3{font:600 20px "Inter Tight",sans-serif;margin:0 0 4px}
   <p class="foot">Flavor notes are short summaries and may vary slightly from the final product. Must be 21+ to purchase.</p>
 </main>
 
+<noscript><p style="text-align:center;padding:16px">This page needs JavaScript turned on to pick a flavor.</p></noscript>
+<p id="err" style="display:none;margin:0 max(5vw,18px) 24px;padding:12px;border-radius:10px;background:#fde8ee;color:#7a0b2c;font-size:14px"></p>
 <script>
-{
-const LINES = {
+window.onerror = function(msg, src, line, col){
+  var b = document.getElementById("err");
+  if (b) { b.style.display = "block"; b.textContent = "Error: " + msg + " (line " + line + ":" + (col || 0) + ")"; }
+};
+</script>
+<script>
+(function(){
+var LINES = {
   "Savers":{c:"#c2185b",isNew:1},"Hubba":{c:"#d65a9b",isNew:1},"Refresher":{c:"#e07b20",isNew:1},
   "Frozen":{c:"#3a9ad9"},"Slush":{c:"#2f5fb3"},"Punch":{c:"#7b3fa0"},"Sour":{c:"#6a9a1f"},
   "Candy":{c:"#cf4f9f"},"Cotton Candy":{c:"#9c7fc4"},"Cupcake":{c:"#8a5a3c"},"Ice Cream":{c:"#c9a676"},
   "Fruit":{c:"#d33b4f"},"Ice":{c:"#4bb3c9"},"Mint":{c:"#1f9e8f"},"Classics":{c:"#7a6a60"}
 };
-const FLAVORS = [
+var FLAVORS = [
  ["Pineapple Savers","Savers","Sweet pineapple done like a fruit candy."],
  ["Wildberry Savers","Savers","Mixed dark-berry candy."],
  ["Drop Sour Savers","Savers","Sour candy drop."],
@@ -194,80 +202,99 @@ const FLAVORS = [
  ["Tobacco","Classics","Classic dry, earthy tobacco."],
  ["Coffee","Classics","Roasted coffee with mild sweetness."]
 ];
-const KEY = "foger-picker-lines-v2";
-const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
-let offLines = ["Classics"];
-try { const s = JSON.parse(localStorage.getItem(KEY)); if (Array.isArray(s)) offLines = s; } catch(e) {}
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(offLines)); } catch(e) {} };
+var KEY = "foger-picker-lines-v2";
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function has(arr, v){ for (var i = 0; i < arr.length; i++) { if (arr[i] === v) return true; } return false; }
+function without(arr, v){ var o = []; for (var i = 0; i < arr.length; i++) { if (arr[i] !== v) o.push(arr[i]); } return o; }
+function $(id){ return document.getElementById(id); }
+var lineNames = []; for (var k in LINES) { if (LINES.hasOwnProperty(k)) lineNames.push(k); }
 
-const $ = id => document.getElementById(id);
-const pool = () => FLAVORS.filter(f => !offLines.includes(f[1]));
-const isNew = f => LINES[f[1]].isNew || f[3];
-let recent = [];
+var offLines = ["Classics"];
+try { var saved = JSON.parse(window.localStorage.getItem(KEY)); if (saved && saved.length !== undefined) offLines = saved; } catch (e) {}
+function save(){ try { window.localStorage.setItem(KEY, JSON.stringify(offLines)); } catch (e) {} }
+
+function pool(){ var o = []; for (var i = 0; i < FLAVORS.length; i++) { if (!has(offLines, FLAVORS[i][1])) o.push(FLAVORS[i]); } return o; }
+function isNew(f){ return !!(LINES[f[1]].isNew || f[3]); }
+var recent = [];
+var spinning = false;
 
 function renderLines(){
-  $("lines").innerHTML = Object.keys(LINES).map(l =>
-    `<button class="lineBtn" type="button" data-line="${esc(l)}" aria-pressed="${!offLines.includes(l)}"><span class="dot" style="--c:${LINES[l].c}"></span>${esc(l)}${LINES[l].isNew?' <span class="new">New</span>':''}</button>`).join("");
+  var h = "";
+  for (var i = 0; i < lineNames.length; i++) {
+    var l = lineNames[i];
+    h += '<button class="lineBtn" type="button" data-line="' + esc(l) + '" aria-pressed="' + (!has(offLines, l)) + '">' +
+         '<span class="dot" style="background:' + LINES[l].c + '"></span>' + esc(l) +
+         (LINES[l].isNew ? ' <span class="new">New</span>' : '') + '</button>';
+  }
+  $("lines").innerHTML = h;
 }
 function renderCount(){
-  const n = pool().length;
-  $("count").textContent = n ? `Choosing from ${n} of ${FLAVORS.length} flavors` : "No flavors selected. Turn a line back on below.";
-  $("spin").disabled = !n || spinning;
-  $("recent").textContent = recent.length ? "Recent picks: " + recent.join(", ") : "";
+  var n = pool().length;
+  $("count").textContent = n ? ("Choosing from " + n + " of " + FLAVORS.length + " flavors") : "No flavors selected. Turn a line back on below.";
+  $("spin").disabled = (!n || spinning);
+  $("recent").textContent = recent.length ? ("Recent picks: " + recent.join(", ")) : "";
 }
 function refresh(){ renderLines(); renderCount(); save(); }
 
 function showResult(f){
-  const c = LINES[f[1]].c;
-  $("result").style.setProperty("--c", c);
-  $("rLine").innerHTML = `<span class="dot" style="--c:${c}"></span>${esc(f[1])}${isNew(f)?' <span class="new">New</span>':''}`;
+  var c = LINES[f[1]].c;
+  $("result").style.borderLeftColor = c;
+  $("rLine").innerHTML = '<span class="dot" style="background:' + c + '"></span>' + esc(f[1]) + (isNew(f) ? ' <span class="new">New</span>' : '');
   $("rName").textContent = f[0];
   $("rDesc").textContent = f[2];
-  $("result").hidden = false;
+  $("result").removeAttribute("hidden");
 }
 
-let spinning = false;
 function spin(){
-  const p = pool();
+  var p = pool();
   if (!p.length || spinning) return;
-  let choices = p.filter(f => !recent.includes(f[0]));
+  var choices = [];
+  for (var i = 0; i < p.length; i++) { if (!has(recent, p[i][0])) choices.push(p[i]); }
   if (!choices.length) choices = p;
-  const pick = choices[Math.floor(Math.random()*choices.length)];
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const rnd = () => p[Math.floor(Math.random()*p.length)][0];
-  spinning = true; $("spin").disabled = true; $("spin").textContent = "Choosing…";
-  $("result").hidden = true;
-  const finish = () => {
+  var pick = choices[Math.floor(Math.random() * choices.length)];
+  var reduce = false;
+  try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  function rnd(){ return p[Math.floor(Math.random() * p.length)][0]; }
+  spinning = true;
+  $("spin").disabled = true;
+  $("spin").textContent = "Choosing…";
+  $("result").setAttribute("hidden", "");
+  function finish(){
     $("s0").textContent = rnd(); $("s1").textContent = pick[0]; $("s2").textContent = rnd();
-    recent = [pick[0], ...recent.filter(n => n !== pick[0])].slice(0,5);
+    recent = [pick[0]].concat(without(recent, pick[0])).slice(0, 5);
     showResult(pick);
-    spinning = false; $("spin").textContent = "Pick another"; renderCount();
-  };
+    spinning = false;
+    $("spin").textContent = "Pick another";
+    renderCount();
+  }
   if (reduce) { finish(); return; }
-  let i = 0, delay = 40; const ticks = 22;
-  const tick = () => {
+  var t = 0, delay = 40, ticks = 22;
+  function tick(){
     $("s0").textContent = $("s1").textContent;
     $("s1").textContent = $("s2").textContent;
     $("s2").textContent = rnd();
-    if (++i >= ticks) { finish(); return; }
-    delay *= 1.1;
-    setTimeout(tick, delay);
-  };
+    t++;
+    if (t >= ticks) { finish(); return; }
+    delay = delay * 1.1;
+    window.setTimeout(tick, delay);
+  }
   tick();
 }
 
-$("spin").addEventListener("click", spin);
-$("lines").addEventListener("click", e => {
-  const b = e.target.closest("[data-line]"); if (!b) return;
-  const l = b.dataset.line;
-  offLines = offLines.includes(l) ? offLines.filter(x => x!==l) : [...offLines, l];
+$("spin").onclick = spin;
+$("lines").onclick = function(e){
+  var el = e.target;
+  while (el && el !== this && !(el.getAttribute && el.getAttribute("data-line"))) el = el.parentNode;
+  if (!el || el === this) return;
+  var l = el.getAttribute("data-line");
+  offLines = has(offLines, l) ? without(offLines, l) : offLines.concat([l]);
   refresh();
-});
-$("allOn").addEventListener("click", () => { offLines = []; refresh(); });
-$("newOnly").addEventListener("click", () => { offLines = Object.keys(LINES).filter(l => !LINES[l].isNew); refresh(); });
-$("noIce").addEventListener("click", () => { offLines = [...new Set([...offLines, "Frozen","Slush","Ice","Mint"])]; refresh(); });
+};
+$("allOn").onclick = function(){ offLines = []; refresh(); };
+$("newOnly").onclick = function(){ var o = []; for (var i = 0; i < lineNames.length; i++) { if (!LINES[lineNames[i]].isNew) o.push(lineNames[i]); } offLines = o; refresh(); };
+$("noIce").onclick = function(){ var add = ["Frozen","Slush","Ice","Mint"]; for (var i = 0; i < add.length; i++) { if (!has(offLines, add[i])) offLines.push(add[i]); } refresh(); };
 refresh();
-}
+})();
 </script>
 </body>
 </html>
