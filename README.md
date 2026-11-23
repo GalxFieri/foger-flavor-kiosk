@@ -106,3 +106,11 @@ it as a counter backup or for when the screen is busy.
 - **Store name / wording:** edit the brand and attract-screen text in `index.html`.
 - **Colors:** the holographic palette and per-category hues live in `styles.css`
   (`--holo`) and the `categories` hues in `flavors.json`.
+
+---
+
+## Random flavor picker
+
+`picker.html` is a standalone, mobile-friendly "pick a random flavor for me" page for customers who can't decide. It has its own built-in flavor list (92 Switch Pro flavors, including the Savers, Hubba, Refresher and new Frozen lines), so edit the `FLAVORS` array inside `picker.html` to change it.
+
+Live: https://galxfieri.github.io/foger-flavor-kiosk/picker.html

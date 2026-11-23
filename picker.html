@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foger Flavor Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, polished retail counter tool
+   IDEA: a product-display panel that rotates through the pod wall and settles on one
+   PICTURE: the reel window, large, with the chosen flavor set like a product label
+   COLOUR and TYPE: white ground, graphite ink, one raspberry accent; Inter Tight + Inter
+   LAYOUT: single column; title, reel, button, result, then line filters */
+:root{color-scheme:light dark;
+  --bg:light-dark(#ffffff,#111214);
+  --panel:light-dark(#f5f5f4,#1b1c1f);
+  --ink:light-dark(#15171c,#f2f2f0);
+  --soft:light-dark(#6b6e76,#9a9ca3);
+  --rule:light-dark(#e3e3e0,#2c2d31);
+  --accent:light-dark(#a3123f,#e04a76);
+  --accent-ink:#ffffff}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+.wrap{max-width:540px;margin:0 auto;padding:28px max(5vw,18px) 40px}
+.brand{font:600 14px Inter,sans-serif;color:var(--soft);margin:0 0 10px}
+h1{font:700 clamp(30px,7.5vw,40px)/1.08 "Inter Tight",system-ui,sans-serif;letter-spacing:-.01em;margin:0 0 8px;text-wrap:balance}
+.sub{margin:0 0 22px;color:var(--soft)}
+.reel{background:var(--panel);border:1px solid var(--rule);border-radius:16px;padding:6px 16px;position:relative;overflow:hidden}
+.reel::before,.reel::after{content:"";position:absolute;left:0;right:0;height:32%;pointer-events:none;z-index:1}
+.reel::before{top:0;background:linear-gradient(var(--panel),transparent)}
+.reel::after{bottom:0;background:linear-gradient(transparent,var(--panel))}
+.slot{text-align:center;font:500 16px/1.2 Inter,sans-serif;color:var(--soft);height:42px;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot.mid{height:clamp(88px,22vw,112px);font:700 clamp(26px,7.5vw,36px)/1.08 "Inter Tight",sans-serif;color:var(--ink);border-block:1px solid var(--rule);white-space:normal;text-wrap:balance}
+.big{display:block;width:100%;margin:16px 0 0;min-height:56px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:600 18px Inter,sans-serif;cursor:pointer;transition:filter .15s}
+.big:hover{filter:brightness(1.08)}
+.big:disabled{opacity:.6;cursor:default}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.result{border:1px solid var(--rule);border-left:4px solid var(--c,var(--accent));border-radius:12px;padding:16px 18px;margin-top:16px}
+.result[hidden]{display:none}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font:500 14px Inter,sans-serif;color:var(--soft)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.new{font:600 13px Inter;color:var(--accent);border:1px solid currentColor;border-radius:99px;padding:0 8px}
+.result h2{font:700 26px/1.15 "Inter Tight",sans-serif;margin:6px 0 4px}
+.result p{margin:0}
+.count{margin:14px 0 0;font-size:14px;color:var(--soft);text-align:center}
+.recent{margin:4px 0 0;font-size:14px;color:var(--soft);text-align:center}
+.filters{margin-top:34px;padding-top:22px;border-top:1px solid var(--rule)}
+h3{font:600 20px "Inter Tight",sans-serif;margin:0 0 4px}
+.hint{margin:0 0 14px;font-size:14px;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.lineBtn{min-height:44px;padding:0 14px;border-radius:99px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font:500 15px Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.lineBtn[aria-pressed=true]{border-color:var(--ink)}
+.lineBtn[aria-pressed=false]{color:var(--soft);background:var(--panel)}
+.lineBtn[aria-pressed=false] .dot{opacity:.3}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.ghost{min-height:44px;padding:0 14px;border-radius:10px;border:0;background:var(--panel);color:var(--ink);font:500 15px Inter,sans-serif;cursor:pointer}
+.foot{font-size:13px;color:var(--soft);margin-top:28px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="brand">Foger Switch Pro</p>
+  <h1>Not sure which flavor to try?</h1>
+  <p class="sub">Tap below and we'll choose one for you at random.</p>
+
+  <div class="reel" aria-hidden="true">
+    <div class="slot" id="s0">Lemon Hubba</div>
+    <div class="slot mid" id="s1">Your flavor appears here</div>
+    <div class="slot" id="s2">Frozen Banana</div>
+  </div>
+
+  <button class="big" id="spin" type="button">Pick my flavor</button>
+
+  <section class="result" id="result" hidden aria-live="polite">
+    <div class="meta" id="rLine"></div>
+    <h2 id="rName"></h2>
+    <p id="rDesc"></p>
+  </section>
+  <p class="count" id="count"></p>
+  <p class="recent" id="recent"></p>
+
+  <section class="filters">
+    <h3>Narrow it down</h3>
+    <p class="hint">Tap a line to include or leave it out.</p>
+    <div class="chips" id="lines"></div>
+    <div class="quick">
+      <button class="ghost" type="button" id="allOn">All lines</button>
+      <button class="ghost" type="button" id="newOnly">New lines only</button>
+      <button class="ghost" type="button" id="noIce">No ice or mint</button>
+    </div>
+  </section>
+
+  <p class="foot">Flavor notes are short summaries and may vary slightly from the final product. Must be 21+ to purchase.</p>
+</main>
+
+<script>
+{
+const LINES = {
+  "Savers":{c:"#c2185b",isNew:1},"Hubba":{c:"#d65a9b",isNew:1},"Refresher":{c:"#e07b20",isNew:1},
+  "Frozen":{c:"#3a9ad9"},"Slush":{c:"#2f5fb3"},"Punch":{c:"#7b3fa0"},"Sour":{c:"#6a9a1f"},
+  "Candy":{c:"#cf4f9f"},"Cotton Candy":{c:"#9c7fc4"},"Cupcake":{c:"#8a5a3c"},"Ice Cream":{c:"#c9a676"},
+  "Fruit":{c:"#d33b4f"},"Ice":{c:"#4bb3c9"},"Mint":{c:"#1f9e8f"},"Classics":{c:"#7a6a60"}
+};
+const FLAVORS = [
+ ["Pineapple Savers","Savers","Sweet pineapple done like a fruit candy."],
+ ["Wildberry Savers","Savers","Mixed dark-berry candy."],
+ ["Drop Sour Savers","Savers","Sour candy drop."],
+ ["Sour Cherry Savers","Savers","Tart, sour cherry candy."],
+ ["Strawberry Savers","Savers","Strawberry hard candy."],
+ ["Strawberry Watermelon Hubba","Hubba","Strawberry and watermelon bubble gum."],
+ ["Lemon Hubba","Hubba","Bright lemon over soft bubble gum."],
+ ["Tropical Hubba","Hubba","Tropical fruit bubble gum."],
+ ["Baja Splash","Hubba","Tropical lime-citrus gum blend served icy."],
+ ["Mint Lemonade","Hubba","Tangy lemonade with cool mint, gum style."],
+ ["Orange Dream Refresher","Refresher","Orange juice with vanilla cream."],
+ ["Mango Pineapple Refresher","Refresher","Mango and pineapple juice blend."],
+ ["Blackberry Passion Refresher","Refresher","Blackberry and passion fruit juice."],
+ ["Peach Berries Refresher","Refresher","White peach with mixed berries."],
+ ["Red Mix Refresher","Refresher","Strawberry, watermelon and cherry."],
+ ["Frozen Pineapple","Frozen","Iced tropical pineapple."],
+ ["Frozen Blackberry","Frozen","Iced dark blackberry."],
+ ["Frozen Watermelon","Frozen","Iced juicy watermelon."],
+ ["Frozen Blueberry","Frozen","Iced ripe blueberry."],
+ ["Frozen Lemon","Frozen","Iced tart lemon."],
+ ["Frozen Banana","Frozen","Iced creamy banana."],
+ ["Frozen Strawberry Grapefruit","Frozen","Strawberry and pink grapefruit on ice.",1],
+ ["Frozen Wildberry Mix","Frozen","Dark berries on ice.",1],
+ ["Frozen Summer Pear","Frozen","Green pear on ice.",1],
+ ["Frozen Orange & Green","Frozen","Sweet orange and green apple on ice.",1],
+ ["Cherry Slush","Slush","Frozen cherry slushie."],
+ ["Strawberry Slush","Slush","Frozen strawberry slushie."],
+ ["Peach Slush","Slush","Frozen peach slushie."],
+ ["Orange Slush","Slush","Frozen orange slushie."],
+ ["Grape Slush","Slush","Frozen grape slushie."],
+ ["Cola Slush","Slush","Cola syrup over crushed ice."],
+ ["Hawaiian Punch","Punch","Tropical fruit punch."],
+ ["Sour Raspberry Punch","Punch","Tart raspberry over fruit punch."],
+ ["Purple Passion Punch","Punch","Grape, passion fruit and dark berry."],
+ ["Triple Berry Punch","Punch","Mixed-berry punch, no ice."],
+ ["Sour Punch","Punch","Sour candy over fruit punch."],
+ ["Sour Fcuking Fab","Sour","Loud mixed-fruit sour candy."],
+ ["Sour Gush","Sour","Sour, gushing fruit candy."],
+ ["Sour Cranapple","Sour","Tart cranberry and apple."],
+ ["Sour Blue Dust","Sour","Blue raspberry sherbet with sour dust."],
+ ["Sour Apple Ice","Sour","Tart green apple with ice."],
+ ["Blue Sour Raspberry","Sour","Sour-dusted blue raspberry."],
+ ["Strawberry B-Pop","Candy","Strawberry lollipop candy."],
+ ["Blue Rancher B-Pop","Candy","Blue raspberry hard candy."],
+ ["OMG B-Pop","Candy","Mixed mystery candy blend."],
+ ["White Gummy","Candy","White gummy candy with pineapple sweetness."],
+ ["Watermelon Bubble Gum","Candy","Watermelon candy with bubble gum."],
+ ["Gummy Bear","Candy","Chewy mixed-fruit gummy bears."],
+ ["Meta Moon","Candy","Mystery fruit candy with a cool finish."],
+ ["Pink & Blue","Candy","Pink and blue cotton candy."],
+ ["Lemon Heads","Candy","Tart lemon candy."],
+ ["Strawberry Cotton Candy","Cotton Candy","Spun sugar with strawberry."],
+ ["Blueberry Cotton Candy","Cotton Candy","Spun sugar with blueberry."],
+ ["Watermelon Cotton Candy","Cotton Candy","Spun sugar with watermelon."],
+ ["Chocolate Cupcake","Cupcake","Rich chocolate on soft cake."],
+ ["Vanilla Cupcake","Cupcake","Classic vanilla cupcake."],
+ ["Red Velvet Cupcake","Cupcake","Red velvet with cream cheese frosting."],
+ ["Skittles Cupcake","Cupcake","Fruity candy on a frosted cupcake."],
+ ["Coconut Cupcake","Cupcake","Coconut frosted cupcake."],
+ ["Strawberry Cupcake","Cupcake","Vanilla cupcake with strawberry."],
+ ["Vanilla Ice Cream","Ice Cream","Creamy vanilla dessert."],
+ ["Strawnana Ice Cream","Ice Cream","Strawberry-banana cream."],
+ ["Berry Bliss","Fruit","Sweet-tart mixed berries."],
+ ["California Cherry","Fruit","Ripe sweet cherry."],
+ ["Dragon Melon","Fruit","Dragon fruit and juicy melon."],
+ ["Cherry Bomb","Fruit","Dark cherry candy."],
+ ["Pink Lemonade","Fruit","Tart pink lemonade."],
+ ["Dragon Fruit Lemonade","Fruit","Lemonade with mellow dragon fruit."],
+ ["Strawberry Watermelon","Fruit","Ripe strawberry and juicy watermelon."],
+ ["Strawberry Kiwi","Fruit","Strawberry and tart kiwi."],
+ ["Strawberry Banana","Fruit","Strawberry and creamy banana."],
+ ["Strawberry Mango","Fruit","Sweet strawberry and mango.",1],
+ ["Mexico Mango","Fruit","Ripe tropical mango."],
+ ["Kiwi Dragon Berry","Fruit","Kiwi, dragon fruit and mixed berry."],
+ ["Cherry Lemon","Fruit","Sweet cherry with lemon."],
+ ["Blueberry Watermelon","Fruit","Blueberry over watermelon."],
+ ["Blue Dragon","Fruit","Blue raspberry over dragon fruit."],
+ ["Lime Berry Orange","Fruit","Lime, mixed berry and orange."],
+ ["Raspberry Watermelon","Fruit","Tart raspberry and juicy watermelon."],
+ ["Blackberry Blueberry","Fruit","Dark blackberry and blueberry."],
+ ["Watermelon Ice","Ice","Juicy watermelon with ice."],
+ ["Blue Razz Ice","Ice","Blue raspberry with ice."],
+ ["Strawberry Ice","Ice","Ripe strawberry with ice."],
+ ["Juicy Peach Ice","Ice","Juicy peach with ice."],
+ ["Pineapple Coconut Ice","Ice","Piña colada with a clean ice finish."],
+ ["Icy Mint","Mint","Cold, icy mint."],
+ ["Miami Mint","Mint","Spearmint with a cool finish."],
+ ["Gum Mint","Mint","Sweet spearmint gum."],
+ ["Cool Mint","Mint","Clean peppermint."],
+ ["Clear","Classics","Unflavored, neutral."],
+ ["Tobacco","Classics","Classic dry, earthy tobacco."],
+ ["Coffee","Classics","Roasted coffee with mild sweetness."]
+];
+const KEY = "foger-picker-lines-v2";
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+let offLines = ["Classics"];
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (Array.isArray(s)) offLines = s; } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(offLines)); } catch(e) {} };
+
+const $ = id => document.getElementById(id);
+const pool = () => FLAVORS.filter(f => !offLines.includes(f[1]));
+const isNew = f => LINES[f[1]].isNew || f[3];
+let recent = [];
+
+function renderLines(){
+  $("lines").innerHTML = Object.keys(LINES).map(l =>
+    `<button class="lineBtn" type="button" data-line="${esc(l)}" aria-pressed="${!offLines.includes(l)}"><span class="dot" style="--c:${LINES[l].c}"></span>${esc(l)}${LINES[l].isNew?' <span class="new">New</span>':''}</button>`).join("");
+}
+function renderCount(){
+  const n = pool().length;
+  $("count").textContent = n ? `Choosing from ${n} of ${FLAVORS.length} flavors` : "No flavors selected. Turn a line back on below.";
+  $("spin").disabled = !n || spinning;
+  $("recent").textContent = recent.length ? "Recent picks: " + recent.join(", ") : "";
+}
+function refresh(){ renderLines(); renderCount(); save(); }
+
+function showResult(f){
+  const c = LINES[f[1]].c;
+  $("result").style.setProperty("--c", c);
+  $("rLine").innerHTML = `<span class="dot" style="--c:${c}"></span>${esc(f[1])}${isNew(f)?' <span class="new">New</span>':''}`;
+  $("rName").textContent = f[0];
+  $("rDesc").textContent = f[2];
+  $("result").hidden = false;
+}
+
+let spinning = false;
+function spin(){
+  const p = pool();
+  if (!p.length || spinning) return;
+  let choices = p.filter(f => !recent.includes(f[0]));
+  if (!choices.length) choices = p;
+  const pick = choices[Math.floor(Math.random()*choices.length)];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const rnd = () => p[Math.floor(Math.random()*p.length)][0];
+  spinning = true; $("spin").disabled = true; $("spin").textContent = "Choosing…";
+  $("result").hidden = true;
+  const finish = () => {
+    $("s0").textContent = rnd(); $("s1").textContent = pick[0]; $("s2").textContent = rnd();
+    recent = [pick[0], ...recent.filter(n => n !== pick[0])].slice(0,5);
+    showResult(pick);
+    spinning = false; $("spin").textContent = "Pick another"; renderCount();
+  };
+  if (reduce) { finish(); return; }
+  let i = 0, delay = 45; const ticks = 24;
+  const tick = () => {
+    $("s0").textContent = $("s1").textContent;
+    $("s1").textContent = $("s2").textContent;
+    $("s2").textContent = rnd();
+    if (++i >= ticks) { finish(); return; }
+    delay *= 1.12;
+    setTimeout(tick, delay);
+  };
+  tick();
+}
+
+$("spin").addEventListener("click", spin);
+$("lines").addEventListener("click", e => {
+  const b = e.target.closest("[data-line]"); if (!b) return;
+  const l = b.dataset.line;
+  offLines = offLines.includes(l) ? offLines.filter(x => x!==l) : [...offLines, l];
+  refresh();
+});
+$("allOn").addEventListener("click", () => { offLines = []; refresh(); });
+$("newOnly").addEventListener("click", () => { offLines = Object.keys(LINES).filter(l => !LINES[l].isNew); refresh(); });
+$("noIce").addEventListener("click", () => { offLines = [...new Set([...offLines, "Frozen","Slush","Ice","Mint"])]; refresh(); });
+refresh();
+}
+</script>
+</body>
+</html>
